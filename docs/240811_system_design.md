@@ -12,6 +12,8 @@
     - [Asynchronism](#asynchronism)
 - [High-level trade-offs](#high-level-trade-offs)
     - [Performance vs scalability](#performance-vs-scalability)
+    - [Latency vs throughput](#latency-vs-throughput)
+    - [Availability vs consistency](#availability-vs-consistency)
 
 <!-- /code_chunk_output -->
 
@@ -111,5 +113,55 @@ Another way to look at performance vs scalability:
 + If you have a performance problem, your system is slow for a single user.
 + If you have a scalability problem, your system is fast for a single user but slow under heavy load.
 
+
+Scalability is frequently used as a magic incantation to indicate that something is badly designed or broken. Often you hear in a discussion "but that doesn't scale" as the magical word to end an argument. This is often an indication that developers are running into situations where the architecture of their system limits their ability to grow their service. If scalability is used in a positive sense it is in general to indicate a desired property as in "our platform needs good scalability".
+
+What is it that we really mean by scalability? *A service is said to be scalable if when we increase the resources in a system, it results in increased performance in a manner proportional to resources added*. Increasing performance in general means serving more units of work, but it can also be to handle larger units of work, such as when datasets grow.
+
+In distributed systems there are other reasons for adding resources to a system; for example to improve the reliability of the offered service. Introducing redundancy is an important first line of defense against failures. *An always-on service is said to be scalable if adding resources to facilitate redundancy does not result in a loss of performance*.
+
+
+Why is scalability so hard? Because scalability cannot be an after-thought. It requires applications and platforms to be designed with scaling in mind, such that adding resources actually results in improving the performance or that if redundancy is introduced the system performance is not adversely affected. Many algorithms that perform reasonably well under low load and small datasets can explode in cost if either requests rates increase, the dataset grows or the number of nodes in the distributed system increases.
+
+A second problem area is that growing a system throught scale-out generally results in a system that has to come to terms with heterogeneity. Resources in the system increase in diversity as next generations of hardware come on line, as bigger or more powerful resources become more cost-effective or when some resources are placed further apart. Heterogeneity means that some nodes will be able to process faster or store more data than other nodes in a system and algorithms that rely on uniformity either break down under these conditions or underutilize the newer resources.
+
+Is achieving good scalability possible? Absolutely, but only if we architect and engineer our systems to take scalability into account. For the systems we build we must carefully inspect along which axis we expect the system to grow, where redundancy is required, and how one should handle heterogeneity in this system, and make sure that architects are aware of which tools they can use for under which conditions, and what the common pitfalls are.
+
 ref: [A word on Scalability](https://www.allthingsdistributed.com/2006/03/a_word_on_scalability.html)
 ref: [Scalability, availability, stability, patterns](https://www.slideshare.net/slideshow/scalability-availability-stability-patterns/4062682)
+
+
+#### Latency vs throughput
+
+**Latency** is the time to perform some action or to product some result.
+
+**Throughput** is the number of such actions or results per unit of time.
+
+Generally, you should aim for **maximal throughput** with **acceptable latency**.
+
+
+One of the effects of adopting a [High Level Synthesis design methodology](https://www.cadence.com/en_US/home/resources/white-papers/how-the-productivity-advantages-of-high-level-synthesis-can-improve-ip-design-verification-and-reuse-wp.html) is that the barrier between "Systems designers" and "Hardware designers" is substantially reduced if not totally eliminated. Suddenly, both "Systems designers" and "Hardware designers" are using not only the same input language to specify their models (C++) but they are also exposed to the same terminology. For this reason, "Hardware designers" are suddenly exposed to two terms to wchi they have had little or no exposure in the past.
+
+The purpose of this post is to clarify two "systems" terms that are usually confused and sometimes used interchangeably: latency and throughput.
+
+**Definition of terms**
+
+Let us attempt to define those two terms:
+
+**Latency** is the time required to perform some action or to produce some result. Latency is measured in units of time -- hours, minutes, seconds, nanoseconds or clock periods.
+
+**Throughput** is the number of such actions executed or results produced per unit of time. This is measured in units of whatever is being produced (cars, motorcycles, I/O samples, memory words, iterations) per unit of time. The term "memory bandwidth" is sometimes used to specify the throughput of memory systems.
+
+**A simple example**
+
+The following manufacturing example should clarify these two concepts:
+
+An assembly line is manufacturing cars. It takes eight hours to manufacture a car and that the factory produces one hundred and twenty cars per day.
+
+The latency is: 8 hours.
+
+The throughput is: 120 cars/day or 5 cars/hour.
+
+
+#### Availability vs consistency
+
