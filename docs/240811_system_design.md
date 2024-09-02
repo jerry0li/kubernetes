@@ -139,6 +139,7 @@ A second problem area is that growing a system throught scale-out generally resu
 Is achieving good scalability possible? Absolutely, but only if we architect and engineer our systems to take scalability into account. For the systems we build we must carefully inspect along which axis we expect the system to grow, where redundancy is required, and how one should handle heterogeneity in this system, and make sure that architects are aware of which tools they can use for under which conditions, and what the common pitfalls are.
 
 ref: [A word on Scalability](https://www.allthingsdistributed.com/2006/03/a_word_on_scalability.html)
+
 ref: [Scalability, availability, stability, patterns](https://www.slideshare.net/slideshow/scalability-availability-stability-patterns/4062682)
 
 
@@ -199,8 +200,11 @@ Response return the most readily available version of the data available on any 
 AP is a good choice if the business needs to allow for eventual consistency or when the system needs to continue working despite external errors.
 
 ref: [CAP theorem revisited](https://robertgreiner.com/cap-theorem-revisited/)
+
 ref: [A plain english introduction to CAP theorem](http://ksat.me/a-plain-english-introduction-to-cap-theorem)
+
 ref: [CAP FAQ](https://github.com/henryr/cap-faq)
+
 ref: [The CAP theorem](https://www.youtube.com/watch?v=k-Yaq8AHlFA)
 
 
@@ -372,7 +376,9 @@ Sites with heavy traffic work well with pull CDNs, as traffic is spread out more
 + CDNs require changing URLs for static content to point to the CDN.
 
 > ref: [Globally distributed content delivery](https://figshare.com/articles/Globally_distributed_content_delivery/6605972)
+> 
 > ref: [The differences between push and pull CDNs](http://www.travelblogadvice.com/technical/the-differences-between-push-and-pull-cdns/)
+> 
 > ref: [Wikipedia](https://en.wikipedia.org/wiki/Content_delivery_network)
 
 
@@ -438,7 +444,11 @@ Load balancers can also help with horizontal scaling, improving performance and 
 + A single load balancer is a single point of failure, configuring multiple load balancers further increases complexity.
   
 > ref: [NGINX architecture](https://blog.nginx.org/blog/inside-nginx-how-we-designed-for-performance-scale)
+> 
 > ref: [HAProxy architecture guide](https://www.haproxy.org/download/1.2/doc/architecture.txt)
+> 
 > ref: [Wikipedia](https://en.wikipedia.org/wiki/Load_balancing_(computing))
+> 
 > ref: [Layer 4 load balancing](https://www.haproxy.com/blog/layer-4-vs-layer-7-load-balancing)
+> 
 > ref: [ELB listener config](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-listener-config.html)
