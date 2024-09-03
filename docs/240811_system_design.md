@@ -25,6 +25,14 @@
     - [Layer 7 load balancing](#layer-7-load-balancing)
     - [Horizontal scaling](#horizontal-scaling)
     - [Disadvantages: load balancer](#disadvantages-load-balancer)
+- [Reverse proxy (web server)](#reverse-proxy-web-server)
+    - [Load balancer vs reverse proxy](#load-balancer-vs-reverse-proxy)
+    - [Disadvantages: reverse proxy](#disadvantages-reverse-proxy)
+    - [Summary from ChatGPT](#summary-from-chatgpt)
+- [Application layer](#application-layer)
+    - [Microservices](#microservices)
+    - [Service Discovery](#service-discovery)
+    - [Disadvantages: application layer](#disadvantages-application-layer)
 
 <!-- /code_chunk_output -->
 
@@ -452,3 +460,99 @@ Load balancers can also help with horizontal scaling, improving performance and 
 > ref: [Layer 4 load balancing](https://www.haproxy.com/blog/layer-4-vs-layer-7-load-balancing)
 > 
 > ref: [ELB listener config](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-listener-config.html)
+
+
+## Reverse proxy (web server)
+
+![alt text](../imgs/reverse_proxy.png)
+
+A reverse proxy is a web server that centralizes internal services and provides unified interfaces to the public. Request from clients are forwarded to a server that can fulfill it before the reverse proxy returns the server's response to the client.
+
+Additional benefits include:
+
++ **Increased security** - Hide information about backend servers, blacklist IPs, limit number of connections per client
++ **Increased scalability and flexibility** - Clients only see the reverse proxy's IP, allowing you to scale servers or change their configuration
++ **SSL termination** - Decrypt incoming requests and encrypt server responses so backend servers do not have to perform these potentially expensive operations
+  - Removes the need to install X.509 certificates on each server
++ **Compression** - Compress server responses
++ **Caching** - Return the response for cached requests
++ **Static content** - Serve static content directly
+  - HTML/CSS/JS
+  - Photos
+  - Videos
+  - Etc
+
+#### Load balancer vs reverse proxy
+
++ Deploying a load balancer is useful when you have multiple servers. Often, load balancers route traffic to a set of servers serving the same function.
++ Reverse proxies can be useful even with just one web server or application server, opening up the benefits described in the previous section.
++ Solutions such as NGINX and HAProxy can support both layer 7 reverse proxying and load balancing.
+
+#### Disadvantages: reverse proxy
+
++ introducing a reverse proxy results in increased complexity.
++ A single reverse proxy is a single point of failure, configuring multiple reverse proxies further increases complexity.
+
+> ref: [Wikipedia](https://en.wikipedia.org/wiki/Reverse_proxy)
+
+> ref: [Reverse proxy vs load balancer](https://www.strongdm.com/what-is/reverse-proxy-vs-load-balancer#:~:text=Reverse%20Proxy%20and%20Load%20Balancer%20Key%20Takeaways%3A&text=Both%20reverse%20proxies%20and%20load,traffic%20and%20ensuring%20high%20availability.)
+
+
+#### Summary from ChatGPT
+
+**Reverse Proxy**: A reverse proxy is a server that sits between client devices (like a browser) and a web server, intercepting requests from clients and forwarding them to the appropriate backend server. The reverse proxy retrieves the response from the backend server and sends it back to the client. This setup provides several benefits, including:
+
++ Load Distribution: It can distribute client requests to multiple backend servers, balancing the load.
++ Security: It can hide the identity and structure of the backend servers, adding a layer of security by preventing direct access to the servers.
++ Caching: It can cache content to reduce the load on backend servers and speed up response times.
++ SSL Termination: It can manage SSL certificates and handle SSL encryption/decryption, offloading this work from backend servers.
+Compression: It can compress responses to reduce bandwidth usage.
+**Load Balancer**: A load balancer is a specific type of reverse proxy that distributes network or application traffic across multiple servers. The primary goal is to ensure that no single server becomes overwhelmed with too much traffic, which can lead to poor performance or even downtime. Load balancers operate in two main types:
+
++ Layer 4 Load Balancing: Works at the transport layer (TCP/UDP) and forwards requests based on IP address and port number.
++ Layer 7 Load Balancing: Works at the application layer (HTTP/HTTPS), making more intelligent decisions based on content, such as URLs or HTTP headers.
+
+**Key Differences**
++ Functionality:
+  - Reverse Proxy: Acts as an intermediary between clients and servers, offering additional features like caching, SSL termination, and security enhancements.
+  - Load Balancer: Focuses primarily on distributing traffic across multiple servers to ensure high availability and reliability.
++ Use Cases:
+  - Reverse Proxy: Used when you want to hide backend servers, cache content, or handle SSL certificates centrally.
+  - Load Balancer: Used to distribute traffic to prevent any single server from becoming a bottleneck, ensuring that the service remains available and responsive.
+
+In many cases, a reverse proxy can include load balancing as one of its features, making the distinction sometimes blurry. However, the primary role of a load balancer is traffic distribution, while a reverse proxy may offer a broader range of features.
+
+
+## Application layer
+
+![alt text](../imgs/application_layer.png)
+
+Separating out the web layer from the application layer (also known as platform layer) allows you scale and configure both layers independently. Adding a new API results in adding application servers without necessarily adding web servers. The single responsibility principle advocates for small and autonomous services that work together. Small teams with small services can plan more aggressively for rapid growth.
+
+Workers in the application layer also help enable asynchronism.
+
+
+#### Microservices
+
+Related to this discussion are [microservices](https://en.wikipedia.org/wiki/Microservices), which can be described as a suite of independently deployable, small, modular services. Each service runs a unique process and communicates through a well-defined, lightweight mechanism to serve a business goal.
+
+Pinterest, for example, could have the following microservices: user profile, follower, feed, search, photo upload, etc.
+
+
+#### Service Discovery
+
+Systems such as [Consul](https://developer.hashicorp.com/consul/docs), [Etcd](https://etcd.io/), and [Zookeeper](https://www.slideshare.net/slideshow/introduction-to-apache-zookeeper/16567274) can help services find each other by keeping track of registered names, addresses, and ports. Health checks help verify service integrity and are often done using an HTTP endpoint. Both Consul and Etcd have a built in ke-value store that can be useful for storing config values and other shared data.
+
+
+#### Disadvantages: application layer
+
++ Adding an application layer with loosely coupled services requires a different approach from an architectural, operations, and process viewpoint (vs a monolithic system)
++ Microservices can add complexity in terms of deployments and operations.
+
+> ref: [Intro to architecting systems for scale](https://lethain.com/introduction-to-architecting-systems-for-scale/)
+
+> ref: [Crack the system design interview](https://tianpan.co/notes/2016-02-13-crack-the-system-design-interview)
+
+> ref: [Service oriented architecture](https://en.wikipedia.org/wiki/Service-oriented_architecture)
+
+> ref: [Here's what you need to know about building microservices](https://cloudncode.blog/2016/07/22/msa-getting-started/)
