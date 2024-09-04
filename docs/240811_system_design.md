@@ -36,6 +36,7 @@
 - [Database](#database)
     - [Relational database management system (RDBMS)](#relational-database-management-system-rdbms)
     - [NoSQL](#nosql)
+    - [SQL or NoSQL](#sql-or-nosql)
 
 <!-- /code_chunk_output -->
 
@@ -727,3 +728,136 @@ Benchmarking and profiling might point you to the following optimizations.
 
 
 #### NoSQL
+
+NoSQL is a collection of data items represented in a **key-value store**, **document store**, **wide column store**, or a **graph database**. Data is denormalized, and joins are generally done in the application code. Most NoSQL stores lack true ACID transactions and favor eventual consistency.
+
+BASE is often used to describe the properties of NoSQL databases. In comparison with the CAP Theorem, BASE chooses availability over consistency.
+
++ Basically available - the system guarantees availability.
++ Soft state - the state of the system may change over time, even without input.
++ Eventual consistency - the system will become consistent over a period of time, given that the system doesn't receive input during that period.
+
+In addition to choosing between SQL or NoSQL, it is helpful to understand which type of NoSQL database best fits your use case. We'll review **key-value stores**, **document stores**, **wide column stores**, and **graph databases** in the next section.
+
+###### Key-value store
+
+```
+Abstraction: hash table
+```
+
+A key-value store generally allows for O(1) reads and writes and is often backed by memory or SSD. Data stores can maintain keys in [lexicographic order](https://en.wikipedia.org/wiki/Lexicographic_order), allowing efficient retrieval of key ranges. Key-value stores can allow for storing of metadata with a value.
+
+Key-value stores provide high performance and are often used for simple data models or for rapidly-changing data, such as an in-memory cache layer. Since they offer only a limited set of operations, complexity is shifted to the application layer if additional operations are needed.
+
+A key-value store is the basis for more complex systems such as a document store, and in some cases, a graph database.
+
+> ref: [Key-value database](https://en.wikipedia.org/wiki/Key%E2%80%93value_database)
+
+> ref: [Disadvantages of key-value stores](https://stackoverflow.com/questions/4056093/what-are-the-disadvantages-of-using-a-key-value-table-over-nullable-columns-or)
+
+> ref: [Redis architecture](http://qnimate.com/overview-of-redis-architecture/)
+
+> ref: [Memcached architecture](https://adayinthelifeof.nl/2011/02/06/memcache-internals/)
+
+
+###### Document store
+
+```
+Abstraction: key-value store with documents stored as values
+```
+
+A document store is centered around documents (XML, JSON, binary, etc), where a document stores all information for a given object. Document stores provide APIs or a query language to query based on the internal structure of the document itself. *Note, many key-value stores include features for working with a value's metadata, blurring the lines between these two storage types.*
+
+Based on the underlying implementation, documents are organized by collections, tags, metadata, or directories. Although documents can be organized or grouped together, documents may have fields that are completely different from each other.
+
+Some document stores like MongoDB and CouchDB also provide a SQL-like language to perform complex queries. DynamoDB supports both key-values and documents.
+
+Document stores provide high flexibility and are often used for working with occasionally changing data.
+
+> ref: [Document-oriented database](https://en.wikipedia.org/wiki/Document-oriented_database)
+
+> ref: [MongoDB architecture](https://www.mongodb.com/resources/products/fundamentals/mongodb-architecture)
+
+> ref: [Elasticsearch architecture](https://www.elastic.co/blog/found-elasticsearch-from-the-bottom-up)
+
+
+###### Wide column store
+
+![alt text](../imgs/wide_column_store.png)
+
+```
+Abstraction: nested map ColumnFamily<RowKey, Columns<ColKey, Value, Timestamp>>
+```
+
+A wide column store's basic unit of data is a column (name/value pair). A column can be grouped in column families (analogous to a SQL table). Super column families further group column families. You can access each column independently with a row key, and columns with the same row key form a row. Each value contains a timestamp for versioning and for conflict resolution.
+
+Google introduced [Bigtable](https://www.read.seas.harvard.edu/~kohler/class/cs239-w08/chang06bigtable.pdf) as the first wide column store, which influenced the open-source [HBase](https://www.edureka.co/blog/hbase-architecture/) often-used in the Hadoop ecosystem, and [Cassandra](https://docs.datastax.com/en/archived/cassandra/3.0/cassandra/architecture/archIntro.html) from Fackbook. Stores such as BigTable, HBase, and Cassandra maintain keys in lexicographic order, allowing efficient retrieval of selective key ranges.
+
+Wide column stores offer high availability and high scalability. They are often used for very large data sets.
+
+> ref: [SK & NoSQL, a brief history](https://blog.grio.com/2015/11/sql-nosql-a-brief-history.html)
+
+
+###### Graph database
+
+![alt text](../imgs/graph_database.png)
+
+```
+Abstraction: graph
+```
+
+In a graph database, each node is a record and each arc is a relationship between two nodes. Graph databases are optimized to represent complex relationships with many foreign keys or many-to-many relationships.
+
+Graph databases offer high performance for data models with complex relationships, such as a social network. They are relatively new and are not yet widely-used; it might be more difficult to find development tools and resources. Many graphs can only be accessed with REST APIs.
+
+> ref: [Graph database](https://en.wikipedia.org/wiki/Graph_database)
+
+> ref: [Neo4j](https://neo4j.com/)
+
+###### further reading
+
+> ref: [Explanation of base terminology](https://stackoverflow.com/questions/3342497/explanation-of-base-terminology)
+
+> ref: [NoSQL databases a survey and decision guidance](https://medium.baqend.com/nosql-databases-a-survey-and-decision-guidance-ea7823a822d?gi=31e4d15f392f#.wskogqenq)
+
+> ref: [Introduction to NoSQL](https://www.youtube.com/watch?v=qI_g07C_Q5I)
+
+> ref: [NoSQL patterns](https://horicky.blogspot.com/2009/11/nosql-patterns.html)
+
+
+#### SQL or NoSQL
+
+![alt text](../imgs/sql_or_nosql.png)
+
+Reasons for SQL:
+
++ Structured data
++ Strict schema
++ Relational data
++ Need for complex joins
++ Transactions
++ Clear patterns for scaling
++ More established: developers, community, code, tools, etc
++ Lookups by index are very fast
+
+Reasons for NoSQL:
+
++ Semi-structured data
++ Dynamic or flexible schema
++ Non-relational data
++ No need for complex joins
++ Store many TB (or PB) of data
++ Very data intensive workload
++ Very high throughput for IOPS
+  
+Sample data well-suited for NoSQL:
+
++ Rapid ingest of clickstream and log data
++ Leaderboard or scoring data
++ Temporary data, such as a shopping cart
++ Frequently accessed ('hot') tables
++ Metadata/lookup tables
+
+> ref: [Scaling up to your first 10 million users](https://www.youtube.com/watch?v=kKjm4ehYiMs)
+
+> ref: [SQL vs NoSQL differences](https://www.sitepoint.com/sql-vs-nosql-differences/)
