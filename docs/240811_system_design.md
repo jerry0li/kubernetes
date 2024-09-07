@@ -57,6 +57,7 @@
     - [User datagram protocol(UDP)](#user-datagram-protocoludp)
     - [Remote procedure call (RPC)](#remote-procedure-call-rpc)
     - [Representational state transfer (REST)](#representational-state-transfer-rest)
+- [Security](#security)
 
 <!-- /code_chunk_output -->
 
@@ -1283,3 +1284,21 @@ REST is focused on exposing data. It minimizes the coupling between client/serve
 > ref: [Thrift](https://engineering.fb.com/2014/02/20/open-source/under-the-hood-building-and-open-sourcing-fbthrift/)
 
 > ref: [Why REST for internal use and not RPC](arstechnica.com/civis/viewtopic.php?t=1190508)
+
+
+## Security
+
+Security is a broad topic. Unless you have considerable experience, a security background, or are applying for a position that requires knowledge of security, you probably won't need to know more than the basics:
+
++ Encrypt in transit and at rest.
++ Sanitize all user inputs or any input parameters exposed to user to prevent [XSS](https://en.wikipedia.org/wiki/Cross-site_scripting) and [SQL injection](https://en.wikipedia.org/wiki/SQL_injection)
++ Use parameterized queries to prevent SQL injection
++ Use the principle of [least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)
+
+> ref: [API security checklist](https://github.com/shieldfy/API-Security-Checklist)
+
+> ref: [Security guide for developers](https://github.com/FallibleInc/security-guide-for-developers)
+
+> ref: [OWASP top ten](https://owasp.org/www-project-top-ten/)
+
+
