@@ -1412,7 +1412,7 @@ Common system design interview questions, with links to resources on how to solv
 
 Articles on how real world systems are designed
 
-![alt text](../imgs/read_world_architecture.png)
+![alt text](../imgs/real_world_architecture.png)
 
 **Don't focus on nitty gritty details for the following articles, instead**:
 
